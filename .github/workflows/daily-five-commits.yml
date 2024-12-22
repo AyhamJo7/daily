@@ -29,7 +29,7 @@ jobs:
       
       - name: Configure Git
         run: |
-          git config --local user.name "YOUR_GITHUB_USERNAME"
+          git config --local user.name "AyhamJo7"
           git config --local user.email "actions@github.com"
       
       - name: Commit changes
