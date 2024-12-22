@@ -10,36 +10,35 @@ on:
     - cron: '0 17 * * *'   # Runs at 17:00 UTC
   workflow_dispatch:       # Allows you to run the workflow manually
 
+# IMPORTANT: Give the default GITHUB_TOKEN write permission
 permissions:
-  contents: write    # <-- This grants write permission to push commits
-
+  contents: write
 
 jobs:
   daily-five-commits:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      - name: Update README
-        run: |
-          # We'll append a line to README.md showing the current date/time
-          echo "Last update: $(date)" >> README.md
-      
       - name: Configure Git
         run: |
           git config --local user.name "AyhamJo7"
           git config --local user.email "actions@github.com"
-      
+
+      - name: Update README
+        run: |
+          echo "Last update: $(date)" >> README.md
+
       - name: Commit changes
         run: |
           git add README.md
-          # Each schedule run will create 1 new commit
           git commit -m "Daily commit: $(date +'%Y-%m-%d %H:%M:%S')"
-      
+
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
+          # Pass GitHub’s built-in token
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           force: true
