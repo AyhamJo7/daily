@@ -10,6 +10,10 @@ on:
     - cron: '0 17 * * *'   # Runs at 17:00 UTC
   workflow_dispatch:       # Allows you to run the workflow manually
 
+permissions:
+  contents: write    # <-- This grants write permission to push commits
+
+
 jobs:
   daily-five-commits:
     runs-on: ubuntu-latest
