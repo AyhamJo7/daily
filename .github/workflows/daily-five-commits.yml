@@ -1,0 +1,41 @@
+name: Daily 5 Commits
+
+on:
+  # We specify multiple cron triggers to run at different hours
+  schedule:
+    - cron: '0 1 * * *'    # Runs at 01:00 UTC
+    - cron: '0 5 * * *'    # Runs at 05:00 UTC
+    - cron: '0 9 * * *'    # Runs at 09:00 UTC
+    - cron: '0 13 * * *'   # Runs at 13:00 UTC
+    - cron: '0 17 * * *'   # Runs at 17:00 UTC
+  workflow_dispatch:       # Allows you to run the workflow manually
+
+jobs:
+  daily-five-commits:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Update README
+        run: |
+          # We'll append a line to README.md showing the current date/time
+          echo "Last update: $(date)" >> README.md
+      
+      - name: Configure Git
+        run: |
+          git config --local user.name "YOUR_GITHUB_USERNAME"
+          git config --local user.email "actions@github.com"
+      
+      - name: Commit changes
+        run: |
+          git add README.md
+          # Each schedule run will create 1 new commit
+          git commit -m "Daily commit: $(date +'%Y-%m-%d %H:%M:%S')"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          branch: main
+          force: true
